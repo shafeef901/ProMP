@@ -6,10 +6,10 @@ import tensorflow as tf
 
 
 def fc(x, scope, nh, *, init_scale=1.0, init_bias=0.0):
-    with tf.variable_scope(scope):
+    with tf.compat.v1.variable_scope(scope):
         nin = x.get_shape()[1].value
-        w = tf.get_variable("w", [nin, nh], initializer=tf.orthogonal_initializer(init_scale))
-        b = tf.get_variable("b", [nh], initializer=tf.constant_initializer(init_bias))
+        w = tf.compat.v1.get_variable("w", [nin, nh], initializer=tf.orthogonal_initializer(init_scale))
+        b = tf.compat.v1.get_variable("b", [nh], initializer=tf.constant_initializer(init_bias))
         return tf.matmul(x, w)+b
 
 
@@ -18,7 +18,7 @@ class Mlp(object):
         activ = tf.tanh
         curr_output = inputs
         self.name = name
-        with tf.variable_scope(self.name):
+        with tf.compat.v1.variable_scope(self.name):
             for i, size in enumerate(hidden_size):
                 curr_output = activ(fc(curr_output, str(i), nh=size, init_scale=np.sqrt(2)))
             self.output = fc(curr_output, 'y_pred', nh=output_size, init_scale=np.sqrt(2))
@@ -44,13 +44,13 @@ class TestOptimizer(unittest.TestCase): #TODO add test for ConjugateGradientOpti
         for optimizer in [MAMLFirstOrderOptimizer()]:
             tf.reset_default_graph()
             with tf.Session():
-                input_phs = tf.placeholder(dtype=tf.float32, shape=[None, 1])
-                target_phs = tf.placeholder(dtype=tf.float32, shape=[None, 1])
+                input_phs = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None, 1])
+                target_phs = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None, 1])
                 network = Mlp(input_phs, 1, hidden_size=(32,32), name='sin')
                 loss = tf.reduce_mean(tf.square(network.output - target_phs))
                 input_ph_dict = OrderedDict({'x': input_phs, 'y': target_phs})
                 optimizer.build_graph(loss, network, input_ph_dict)
-                sess = tf.get_default_session()
+                sess = tf.compat.v1.get_default_session()
                 sess.run(tf.global_variables_initializer())
 
                 for i in range(5000):
@@ -71,9 +71,9 @@ class TestOptimizer(unittest.TestCase): #TODO add test for ConjugateGradientOpti
         for optimizer in [MAMLFirstOrderOptimizer()]:
             tf.reset_default_graph()
             with tf.Session():
-                input_phs = tf.placeholder(dtype=tf.float32, shape=[None, 100])
-                target_mean_ph = tf.placeholder(dtype=tf.float32, shape=[None, 1])
-                target_std_ph = tf.placeholder(dtype=tf.float32, shape=[None, 1])
+                input_phs = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None, 100])
+                target_mean_ph = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None, 1])
+                target_std_ph = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None, 1])
 
                 mean_network = Mlp(input_phs, 1, hidden_size=(8,8), name='mean')
                 std_network = Mlp(input_phs, 1, hidden_size=(8,8), name='std')
@@ -90,7 +90,7 @@ class TestOptimizer(unittest.TestCase): #TODO add test for ConjugateGradientOpti
 
                 optimizer.build_graph(loss, joined_network, input_ph_dict)
 
-                sess = tf.get_default_session()
+                sess = tf.compat.v1.get_default_session()
                 sess.run(tf.global_variables_initializer())
 
                 for i in range(2000):

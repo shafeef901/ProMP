@@ -36,7 +36,7 @@ class DummyEnv(object):
 class TestPolicy(unittest.TestCase):
 
     def setUp(self):
-        sess = tf.get_default_session()
+        sess = tf.compat.v1.get_default_session()
         if sess is None:
             tf.InteractiveSession()
 
@@ -50,7 +50,7 @@ class TestPolicy(unittest.TestCase):
                                             name='test_policy_output_sym',
                                             hidden_sizes=(64, 64))
 
-            obs_ph_1 = tf.placeholder(dtype=tf.float32, name="obs_ph_1",
+            obs_ph_1 = tf.compat.v1.placeholder(dtype=tf.float32, name="obs_ph_1",
                                        shape=(None,) +  self.env.observation_space.shape)
             output_sym_1 = self.policy.distribution_info_sym(obs_ph_1)
 
@@ -91,7 +91,7 @@ class TestPolicy(unittest.TestCase):
                                         name='test_policy_serialize',
                                         hidden_sizes=(64, 64))
 
-        sess = tf.get_default_session()
+        sess = tf.compat.v1.get_default_session()
         sess.run(tf.global_variables_initializer())
         all_param_values = self.policy.get_param_values()
 
@@ -106,7 +106,7 @@ class TestPolicy(unittest.TestCase):
                                         name='test_policy_serialize2',
                                         hidden_sizes=(54, 23))
 
-        sess = tf.get_default_session()
+        sess = tf.compat.v1.get_default_session()
         sess.run(tf.global_variables_initializer())
 
         obs = env.get_obs()

@@ -1,5 +1,5 @@
 from meta_policy_search.baselines.linear_baseline import LinearFeatureBaseline
-from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
+# from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
 from meta_policy_search.envs.normalized_env import normalize
 from meta_policy_search.meta_algos.pro_mp import ProMP
 from meta_policy_search.meta_trainer import Trainer
@@ -26,7 +26,9 @@ def main(config):
 
     env = globals()[config['env']]() # instantiate env
     env = normalize(env) # apply normalize wrapper to env
+    # env.render()
 
+    print("1")
     policy = MetaGaussianMLPPolicy(
             name="meta-policy",
             obs_dim=np.prod(env.observation_space.shape),
@@ -35,6 +37,8 @@ def main(config):
             hidden_sizes=config['hidden_sizes'],
         )
 
+
+    print("2")
     sampler = MetaSampler(
         env=env,
         policy=policy,
@@ -44,6 +48,7 @@ def main(config):
         parallel=config['parallel'],
     )
 
+    print("3")
     sample_processor = MetaSampleProcessor(
         baseline=baseline,
         discount=config['discount'],
@@ -51,6 +56,7 @@ def main(config):
         normalize_adv=config['normalize_adv'],
     )
 
+    print("4")
     algo = ProMP(
         policy=policy,
         inner_lr=config['inner_lr'],
@@ -64,6 +70,7 @@ def main(config):
         adaptive_inner_kl_penalty=config['adaptive_inner_kl_penalty'],
     )
 
+    print("5")
     trainer = Trainer(
         algo=algo,
         policy=policy,
@@ -74,14 +81,21 @@ def main(config):
         num_inner_grad_steps=config['num_inner_grad_steps'],
     )
 
+    print("6")
     trainer.train()
 
 if __name__=="__main__":
+
+    print("----Start Main----")
     idx = int(time.time())
 
+    print("----Parse 1----")
     parser = argparse.ArgumentParser(description='ProMP: Proximal Meta-Policy Search')
+    print("----Parse 2----")
     parser.add_argument('--config_file', type=str, default='', help='json file with run specifications')
+    print("----Parse 3----")
     parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/pro-mp/run_%d' % idx)
+    print("----Parse 4----")
 
     args = parser.parse_args()
 
@@ -127,12 +141,15 @@ if __name__=="__main__":
 
         }
 
+    print("----Parse 5----")
     # configure logger
     logger.configure(dir=args.dump_path, format_strs=['stdout', 'log', 'csv'],
                      snapshot_mode='last_gap')
 
+    print("----Parse 6----")
     # dump run configuration before starting training
     json.dump(config, open(args.dump_path + '/params.json', 'w'), cls=ClassEncoder)
 
+    print("----Parse 7----")
     # start the actual algorithm
     main(config)

@@ -54,7 +54,7 @@ class TestPolicy(unittest.TestCase):
                                        shape=(None,) +  self.env.observation_space.shape)
             output_sym_1 = self.policy.distribution_info_sym(obs_ph_1)
 
-            sess.run(tf.global_variables_initializer())
+            sess.run(tf.compat.v1.global_variables_initializer())
 
             n_obs = self.env.get_obs(n=100)
             action, agent_infos = self.policy.get_actions(n_obs)
@@ -74,7 +74,7 @@ class TestPolicy(unittest.TestCase):
                                             name='test_policy_get_action',
                                             hidden_sizes=(64, 64))
 
-            sess.run(tf.global_variables_initializer())
+            sess.run(tf.compat.v1.global_variables_initializer())
 
             obs = self.env.get_obs()
             action, agent_infos = self.policy.get_action(obs)
@@ -92,7 +92,7 @@ class TestPolicy(unittest.TestCase):
                                         hidden_sizes=(64, 64))
 
         sess = tf.compat.v1.get_default_session()
-        sess.run(tf.global_variables_initializer())
+        sess.run(tf.compat.v1.global_variables_initializer())
         all_param_values = self.policy.get_param_values()
 
         self.policy.set_params(all_param_values)
@@ -107,7 +107,7 @@ class TestPolicy(unittest.TestCase):
                                         hidden_sizes=(54, 23))
 
         sess = tf.compat.v1.get_default_session()
-        sess.run(tf.global_variables_initializer())
+        sess.run(tf.compat.v1.global_variables_initializer())
 
         obs = env.get_obs()
         _, pre_agent_infos = policy.get_action(obs)

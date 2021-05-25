@@ -51,7 +51,7 @@ class TestOptimizer(unittest.TestCase): #TODO add test for ConjugateGradientOpti
                 input_ph_dict = OrderedDict({'x': input_phs, 'y': target_phs})
                 optimizer.build_graph(loss, network, input_ph_dict)
                 sess = tf.compat.v1.get_default_session()
-                sess.run(tf.global_variables_initializer())
+                sess.run(tf.compat.v1.global_variables_initializer())
 
                 for i in range(5000):
                     xs = np.random.normal(0, 3, (1000, 1))
@@ -91,7 +91,7 @@ class TestOptimizer(unittest.TestCase): #TODO add test for ConjugateGradientOpti
                 optimizer.build_graph(loss, joined_network, input_ph_dict)
 
                 sess = tf.compat.v1.get_default_session()
-                sess.run(tf.global_variables_initializer())
+                sess.run(tf.compat.v1.global_variables_initializer())
 
                 for i in range(2000):
                     means = np.random.random(size=(1000))

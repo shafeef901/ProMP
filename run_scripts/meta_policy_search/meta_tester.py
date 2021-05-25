@@ -54,11 +54,11 @@ class Tester(object):
                     logger.log("---------Testing on task", j, "~", j+self.sampler.meta_batch_size-1, "---------")
 
                     # initialize uninitialized vars  (only initialize vars that were not loaded)
-                    # uninit_vars = [var for var in tf.global_variables() if
-                    #                not sess.run(tf.is_variable_initialized(var))]
+                    # uninit_vars = [var for var in tf.compat.v1.global_variables() if
+                    #                not sess.run(tf.compat.v1.is_variable_initialized(var))]
                     # sess.run(tf.variables_initializer(uninit_vars))
 
-                    uninit_vars = [var for var in tf.global_variables()]
+                    uninit_vars = [var for var in tf.compat.v1.global_variables()]
                     sess.run(tf.variables_initializer(uninit_vars))
 
                     logger.log("Sampling set of tasks/goals for this meta-batch...")

@@ -72,8 +72,9 @@ class Trainer(object):
         with self.sess.as_default() as sess:
 
             # initialize uninitialized vars  (only initialize vars that were not loaded)
-            uninit_vars = [var for var in tf.global_variables() if not sess.run(tf.is_variable_initialized(var))]
-            sess.run(tf.variables_initializer(uninit_vars))
+            uninit_vars = [var for var in tf.compat.v1.global_variables() if not sess.run(tf.compat.v1.is_variable_initialized(var))]
+            print(uninit_vars)
+            sess.run(tf.compat.v1.variables_initializer(uninit_vars))
 
             start_time = time.time()
             for itr in range(self.start_itr, self.n_itr):

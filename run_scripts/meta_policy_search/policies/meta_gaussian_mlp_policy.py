@@ -96,6 +96,22 @@ class MetaGaussianMLPPolicy(GaussianMLPPolicy, MetaPolicy):
         action, agent_infos = action[task][0], dict(mean=agent_infos[task][0]['mean'], log_std=agent_infos[task][0]['log_std'])
         return action, agent_infos
 
+    def get_action_render(self, observation, task=0):
+        """
+        Runs a single observation through the specified policy and samples an action
+
+        Args:
+            observation (ndarray) : single observation - shape: (obs_dim,)
+
+        Returns:
+            (ndarray) : single action - shape: (action_dim,)
+        """
+        self._pre_update_mode = True
+        observation = np.repeat(np.expand_dims(np.expand_dims(observation, axis=0), axis=0), self.meta_batch_size, axis=0)
+        action, agent_infos = self.get_actions(observation)
+        action, agent_infos = action[task][0], dict(mean=agent_infos[task][0]['mean'], log_std=agent_infos[task][0]['log_std'])
+        return action, agent_infos
+
     def get_actions(self, observations):
         """
         Args:

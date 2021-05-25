@@ -1,4 +1,4 @@
-from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
+# from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
 import mujoco_py
 import time
 import joblib
@@ -9,19 +9,15 @@ sess = tf.compat.v1.Session()
 
 with sess.as_default() as sess:
 
-	# load trained tf model
+	# load dumped giles
 	filename = "../data/pro-mp/run_1621852426/params.pkl"
-	print("-- loading start --")
 	params = joblib.load(filename)
-	print("-- loading done --")
-	
-	print(params['policy'])
-	print(params['env'])
-	print(params['itr'])
+	env, policy = params['env'], params['policy']
 
+	print(env.observation_space,env.action_space)
 
 	#load environment
-	hf = HalfCheetahRandDirecEnv()
+	# hf = HalfCheetahRandDirecEnv()
 
 
 	# viewer = mujoco_py.MjViewer(hf.sim)

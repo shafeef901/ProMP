@@ -41,7 +41,7 @@ class TestPolicy(unittest.TestCase):
             tf.InteractiveSession()
 
     def test_output_sym(self):
-        with tf.Session() as sess:
+        with tf.compat.v1.Session() as sess:
             obs_dim = 23
             action_dim = 7
             self.env = DummyEnv(obs_dim, action_dim)
@@ -65,7 +65,7 @@ class TestPolicy(unittest.TestCase):
 
     def test_get_action(self):
 
-        with tf.Session() as sess:
+        with tf.compat.v1.Session() as sess:
             obs_dim = 23
             action_dim = 7
             self.env = DummyEnv(obs_dim, action_dim)
@@ -113,7 +113,7 @@ class TestPolicy(unittest.TestCase):
         _, pre_agent_infos = policy.get_action(obs)
         pkl_str = pickle.dumps(policy)
         tf.reset_default_graph()
-        with tf.Session() as sess:
+        with tf.compat.v1.Session() as sess:
             policy_unpickled = pickle.loads(pkl_str)
             _, post_agent_infos = policy_unpickled.get_action(obs)
             for key in pre_agent_infos.keys():

@@ -43,7 +43,7 @@ class TestOptimizer(unittest.TestCase): #TODO add test for ConjugateGradientOpti
         np.random.seed(65)
         for optimizer in [MAMLFirstOrderOptimizer()]:
             tf.reset_default_graph()
-            with tf.Session():
+            with tf.compat.v1.Session():
                 input_phs = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None, 1])
                 target_phs = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None, 1])
                 network = Mlp(input_phs, 1, hidden_size=(32,32), name='sin')
@@ -70,7 +70,7 @@ class TestOptimizer(unittest.TestCase): #TODO add test for ConjugateGradientOpti
         np.random.seed(65)
         for optimizer in [MAMLFirstOrderOptimizer()]:
             tf.reset_default_graph()
-            with tf.Session():
+            with tf.compat.v1.Session():
                 input_phs = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None, 100])
                 target_mean_ph = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None, 1])
                 target_std_ph = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None, 1])

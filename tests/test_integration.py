@@ -126,7 +126,7 @@ class TestLikelihoodRation(unittest.TestCase):
         )
 
     def test_likelihood_ratio(self):
-        with tf.Session() as sess:
+        with tf.compat.v1.Session() as sess:
 
             # initialize uninitialized vars  (only initialize vars that were not loaded)
             uninit_vars = [var for var in tf.compat.v1.global_variables() if not sess.run(tf.compat.v1.is_variable_initialized(var))]

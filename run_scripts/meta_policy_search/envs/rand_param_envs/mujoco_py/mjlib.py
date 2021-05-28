@@ -2,6 +2,8 @@ from ctypes import *
 import os
 from .util import *
 from .mjtypes import *
+import sys
+print(sys.path)
 
 from rand_param_envs.mujoco_py import config
 

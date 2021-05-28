@@ -1,5 +1,6 @@
 from meta_policy_search.baselines.linear_baseline import LinearFeatureBaseline
-from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
+# from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
+from meta_policy_search.envs.mujoco_envs.ant_rand_goal import AntRandGoalEnv
 from meta_policy_search.envs.normalized_env import normalize
 from meta_policy_search.meta_algos.pro_mp import ProMP
 from meta_policy_search.meta_trainer import Trainer
@@ -80,28 +81,42 @@ def main(config):
     trainer.train()
 
 if __name__=="__main__":
+
+    """
+        ### CONFIGURATIONS ###
+
+        task            - task specifying environment and nature of task
+        load_checkpoint - flag to specify if we are continuing training from checkpoint
+        start_itr       - for continuing training from a checkpoint number
+        dump_path       - checkpoint folder name, if continuing training, else creates new path
+        
+        ###                ###
+    """
+
+
     idx = int(time.time())
 
     start_itr = 0
+    task = 'AntRandGoalEnv'
 
     parser = argparse.ArgumentParser(description='ProMP: Proximal Meta-Policy Search')
     parser.add_argument('--config_file', type=str, default='', help='json file with run specifications')
 
     # change flag to load checkpoint
-    load_checkpoint = True
+    load_checkpoint = False
     
     if load_checkpoint:
 
-        # change start_itr and dump_path accordingly to laod required file
+        # change start_itr and dump_path accordingly to load required file
         start_itr = 4
         dump_path = 'run_1622186525'
-        checkpoint_name = meta_policy_search_path + '/data/pro-mp/{}/checkpoints/ProMP_Iteration_{}.meta'.format(dump_path, start_itr)
+        checkpoint_name = meta_policy_search_path + '/data/pro-mp/{}/{}/checkpoints/ProMP_Iteration_{}.meta'.format(task, dump_path, start_itr)
         assert os.path.exists(checkpoint_name), "Provide valid checkpoint name."
 
-        parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/pro-mp/{}'.format(dump_path))
+        parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/pro-mp/{}/{}'.format(task,dump_path))
 
     else:    
-        parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/pro-mp/run_%d' % idx)
+        parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/pro-mp/{}/run_{}'.format(task,idx))
 
     args = parser.parse_args()
 
@@ -117,7 +132,7 @@ if __name__=="__main__":
 
             'baseline': 'LinearFeatureBaseline',
 
-            'env': 'HalfCheetahRandDirecEnv',
+            'env': task,
 
             # sampler config
             'rollouts_per_meta_task': 20,

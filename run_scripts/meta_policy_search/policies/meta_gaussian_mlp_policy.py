@@ -106,7 +106,7 @@ class MetaGaussianMLPPolicy(GaussianMLPPolicy, MetaPolicy):
         Returns:
             (ndarray) : single action - shape: (action_dim,)
         """
-        self._pre_update_mode = True
+        self._pre_update_mode = False
         observation = np.repeat(np.expand_dims(np.expand_dims(observation, axis=0), axis=0), self.meta_batch_size, axis=0)
         action, agent_infos = self.get_actions(observation)
         action, agent_infos = action[task][0], dict(mean=agent_infos[task][0]['mean'], log_std=agent_infos[task][0]['log_std'])

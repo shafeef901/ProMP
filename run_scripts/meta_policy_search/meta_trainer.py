@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import time
+import os
 from meta_policy_search.utils import logger
 
 
@@ -29,7 +30,7 @@ class Trainer(object):
         n_itr (int) : Number of iterations to train for
         start_itr (int) : Number of iterations policy has already trained for, if reloading
         num_inner_grad_steps (int) : Number of inner steps per maml iteration
-        sess (tf.Session) : current tf session (if we loaded policy, for example)
+        sess (tf.compat.v1.Session) : current tf session (if we loaded policy, for example)
     """
     def __init__(
             self,
@@ -39,9 +40,10 @@ class Trainer(object):
             sample_processor,
             policy,
             n_itr,
+            checkpoint_path,
             start_itr=0,
             num_inner_grad_steps=1,
-            sess=None,
+            sess=None
             ):
         self.algo = algo
         self.env = env
@@ -51,9 +53,11 @@ class Trainer(object):
         self.policy = policy
         self.n_itr = n_itr
         self.start_itr = start_itr
+        self.checkpoint_path = checkpoint_path
         self.num_inner_grad_steps = num_inner_grad_steps
+        self.saver = tf.train.Saver()
         if sess is None:
-            sess = tf.Session()
+            sess = tf.compat.v1.Session()
         self.sess = sess
 
     def train(self):
@@ -69,11 +73,22 @@ class Trainer(object):
                 algo.optimize_policy()
                 sampler.update_goals()
         """
+
+
+        
+
         with self.sess.as_default() as sess:
+
+            # loading previous checkpoint
+
+            if self.start_itr != 0:
+                checkpoint_name = self.checkpoint_path + '/checkpoints/ProMP_Iteration_{}'.format(self.start_itr)
+                print("loading from checkpoint {}".format(checkpoint_name))
+                saver = tf.train.import_meta_graph('{}.meta'.format(checkpoint_name))
+                saver.restore(sess,checkpoint_name)
 
             # initialize uninitialized vars  (only initialize vars that were not loaded)
             uninit_vars = [var for var in tf.compat.v1.global_variables() if not sess.run(tf.compat.v1.is_variable_initialized(var))]
-            print(uninit_vars)
             sess.run(tf.compat.v1.variables_initializer(uninit_vars))
 
             start_time = time.time()
@@ -144,6 +159,18 @@ class Trainer(object):
 
                 logger.log("Saving snapshot...")
                 params = self.get_itr_snapshot(itr)
+
+
+                # save checkpoint
+
+                file_name = os.path.join(self.checkpoint_path, 'checkpoints/ProMP_Iteration_{}'.format(itr))
+
+                if itr % 2 == 0:
+                    print("Saving model...")
+                    self.saver.save(sess, file_name)
+                    # self.saver.save(sess, './{}_Iteration_{}'.format("_".join(self.mode_name.split()), itr))
+
+
                 logger.save_itr_params(itr, params)
                 logger.log("Saved")
 

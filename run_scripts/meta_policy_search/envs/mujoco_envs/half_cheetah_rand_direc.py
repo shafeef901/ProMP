@@ -7,9 +7,9 @@ from gym.envs.mujoco.mujoco_env import MujocoEnv
 
 class HalfCheetahRandDirecEnv(MetaEnv, MujocoEnv, gym.utils.EzPickle):
     def __init__(self, goal_direction=None):
-        self.goal_direction = goal_direction if goal_direction else np.random.choice((-1.0, 1.0), (1, ))[0]
+        self.goal_direction = goal_direction if goal_direction else 1.0
         MujocoEnv.__init__(self, 'half_cheetah.xml', 5)
-        gym.utils.EzPickle.__init__(self, self.goal_direction)
+        gym.utils.EzPickle.__init__(self, goal_direction)
 
     def sample_tasks(self, n_tasks):
         # for fwd/bwd env, goal direc is backwards if - 1.0, forwards if + 1.0

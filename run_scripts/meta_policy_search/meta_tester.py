@@ -26,7 +26,7 @@ class Tester(object):
         self.policy = policy
         self.num_inner_grad_steps = num_inner_grad_steps
         if sess is None:
-            sess = tf.Session()
+            sess = tf.compat.v1.Session()
         self.sess = sess
 
     #############################

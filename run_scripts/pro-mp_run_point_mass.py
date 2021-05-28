@@ -10,7 +10,6 @@ from meta_policy_search.utils import logger
 from meta_policy_search.utils.utils import set_seed, ClassEncoder
 
 import numpy as np
-import tensorflow as tf
 import os
 import json
 import argparse

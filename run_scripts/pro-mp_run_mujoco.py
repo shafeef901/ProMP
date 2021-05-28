@@ -28,7 +28,6 @@ def main(config):
     env = normalize(env) # apply normalize wrapper to env
     # env.render()
 
-    print("1")
     policy = MetaGaussianMLPPolicy(
             name="meta-policy",
             obs_dim=np.prod(env.observation_space.shape),
@@ -37,8 +36,6 @@ def main(config):
             hidden_sizes=config['hidden_sizes'],
         )
 
-
-    print("2")
     sampler = MetaSampler(
         env=env,
         policy=policy,
@@ -48,7 +45,6 @@ def main(config):
         parallel=config['parallel'],
     )
 
-    print("3")
     sample_processor = MetaSampleProcessor(
         baseline=baseline,
         discount=config['discount'],
@@ -56,7 +52,6 @@ def main(config):
         normalize_adv=config['normalize_adv'],
     )
 
-    print("4")
     algo = ProMP(
         policy=policy,
         inner_lr=config['inner_lr'],
@@ -70,7 +65,6 @@ def main(config):
         adaptive_inner_kl_penalty=config['adaptive_inner_kl_penalty'],
     )
 
-    print("5")
     trainer = Trainer(
         algo=algo,
         policy=policy,
@@ -79,23 +73,35 @@ def main(config):
         sample_processor=sample_processor,
         n_itr=config['n_itr'],
         num_inner_grad_steps=config['num_inner_grad_steps'],
+        checkpoint_path=args.dump_path,
+        start_itr=config['start_itr'],
     )
 
-    print("6")
     trainer.train()
 
 if __name__=="__main__":
-
-    print("----Start Main----")
     idx = int(time.time())
 
-    print("----Parse 1----")
+    start_itr = 0
+
     parser = argparse.ArgumentParser(description='ProMP: Proximal Meta-Policy Search')
-    print("----Parse 2----")
     parser.add_argument('--config_file', type=str, default='', help='json file with run specifications')
-    print("----Parse 3----")
-    parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/pro-mp/run_%d' % idx)
-    print("----Parse 4----")
+
+    # change flag to load checkpoint
+    load_checkpoint = True
+    
+    if load_checkpoint:
+
+        # change start_itr and dump_path accordingly to laod required file
+        start_itr = 4
+        dump_path = 'run_1622186525'
+        checkpoint_name = meta_policy_search_path + '/data/pro-mp/{}/checkpoints/ProMP_Iteration_{}.meta'.format(dump_path, start_itr)
+        assert os.path.exists(checkpoint_name), "Provide valid checkpoint name."
+
+        parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/pro-mp/{}'.format(dump_path))
+
+    else:    
+        parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/pro-mp/run_%d' % idx)
 
     args = parser.parse_args()
 
@@ -138,18 +144,16 @@ if __name__=="__main__":
             'n_itr': 1001, # number of overall training iterations
             'meta_batch_size': 40, # number of sampled meta-tasks per iterations
             'num_inner_grad_steps': 1, # number of inner / adaptation gradient steps
+            'start_itr': start_itr,
 
         }
 
-    print("----Parse 5----")
     # configure logger
     logger.configure(dir=args.dump_path, format_strs=['stdout', 'log', 'csv'],
                      snapshot_mode='last_gap')
 
-    print("----Parse 6----")
     # dump run configuration before starting training
     json.dump(config, open(args.dump_path + '/params.json', 'w'), cls=ClassEncoder)
 
-    print("----Parse 7----")
     # start the actual algorithm
     main(config)

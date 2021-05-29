@@ -1,6 +1,7 @@
 from meta_policy_search.baselines.linear_baseline import LinearFeatureBaseline
 # from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
-from meta_policy_search.envs.mujoco_envs.ant_rand_goal import AntRandGoalEnv
+# from meta_policy_search.envs.mujoco_envs.ant_rand_goal import AntRandGoalEnv
+from meta_policy_search.envs.mujoco_envs.ant_rand_direc import AntRandDirecEnv
 from meta_policy_search.envs.normalized_env import normalize
 from meta_policy_search.meta_algos.pro_mp import ProMP
 from meta_policy_search.meta_trainer import Trainer
@@ -93,23 +94,21 @@ if __name__=="__main__":
         ###                ###
     """
 
-
-    idx = int(time.time())
-
     start_itr = 0
-    task = 'AntRandGoalEnv'
+    task = 'AntRandDirecEnv'
 
     parser = argparse.ArgumentParser(description='ProMP: Proximal Meta-Policy Search')
     parser.add_argument('--config_file', type=str, default='', help='json file with run specifications')
 
     # change flag to load checkpoint
-    load_checkpoint = False
+    load_checkpoint = True
     
     if load_checkpoint:
 
         # change start_itr and dump_path accordingly to load required file
-        start_itr = 4
-        dump_path = 'run_1622186525'
+        idx = int(time.time())
+        start_itr = 180
+        dump_path = 'run_1622210986'
         checkpoint_name = meta_policy_search_path + '/data/pro-mp/{}/{}/checkpoints/ProMP_Iteration_{}.meta'.format(task, dump_path, start_itr)
         assert os.path.exists(checkpoint_name), "Provide valid checkpoint name."
 

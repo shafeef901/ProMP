@@ -9,12 +9,12 @@ sess = tf.compat.v1.Session()
 with sess.as_default() as sess:
 
 	# load dumped files
-	filename = "../data/pro-mp/run_1621955899/params.pkl"
+	filename = "../data/pro-mp/AntRandDirecEnv/run_1622210986/params.pkl"
 	params = joblib.load(filename)
 	env, policy, baseline = params['env'], params['policy'], params['baseline']
 
 	# setting task to render and test
-	env.set_task(1.0)
+	# env.set_task(1.0)
 
 	print(env.get_task())
 
@@ -26,7 +26,7 @@ with sess.as_default() as sess:
 	obs = env.reset()
 	policy.switch_to_pre_update()  # Switch to pre-update policy
 	while True:
-		action, agent_infos = policy.get_action_render(obs,-1)
+		action, agent_infos = policy.get_action_render(obs)
 
 		obs, reward, done, env_info = env.step(action)
 		print(reward)

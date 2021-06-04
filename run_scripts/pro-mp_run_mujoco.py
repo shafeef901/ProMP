@@ -1,7 +1,8 @@
 from meta_policy_search.baselines.linear_baseline import LinearFeatureBaseline
 # from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
 # from meta_policy_search.envs.mujoco_envs.ant_rand_goal import AntRandGoalEnv
-from meta_policy_search.envs.mujoco_envs.ant_rand_direc import AntRandDirecEnv
+# from meta_policy_search.envs.mujoco_envs.ant_rand_direc import AntRandDirecEnv
+from meta_policy_search.envs.mujoco_envs.metalhead_v1_rand_direc import MetalheadEnvV1RandDirec
 from meta_policy_search.envs.normalized_env import normalize
 from meta_policy_search.meta_algos.pro_mp import ProMP
 from meta_policy_search.meta_trainer import Trainer
@@ -17,18 +18,31 @@ import os
 import json
 import argparse
 import time
+import gym
 
 meta_policy_search_path = '/'.join(os.path.realpath(os.path.dirname(__file__)).split('/')[:-1])
 
 def main(config):
     set_seed(config['seed'])
 
-
     baseline =  globals()[config['baseline']]() #instantiate baseline
 
+    # # register metalhaed-v1
+    # if config['env'] == 'MetalheadEnvV1RandDirec':
+
+    #     gym.envs.register(
+    #         id='Metalhead-v1',
+    #         entry_point='meta_policy_search.envs.mujoco_envs.metalhead_v1_rand_direc:MetalheadEnvV1RandDirec',
+    #         max_episode_steps=1000,
+    #         reward_threshold=4800.0,
+    #     )
+
+    #     env = globals()[normalize(gym.make('Metalhead-v1'))]
+
+    # else:
     env = globals()[config['env']]() # instantiate env
     env = normalize(env) # apply normalize wrapper to env
-    # env.render()
+
 
     policy = MetaGaussianMLPPolicy(
             name="meta-policy",
@@ -95,18 +109,18 @@ if __name__=="__main__":
     """
 
     start_itr = 0
-    task = 'AntRandDirecEnv'
+    task = 'MetalheadEnvV1RandDirec'
 
     parser = argparse.ArgumentParser(description='ProMP: Proximal Meta-Policy Search')
     parser.add_argument('--config_file', type=str, default='', help='json file with run specifications')
 
     # change flag to load checkpoint
-    load_checkpoint = True
-    
-    if load_checkpoint:
+    load_checkpoint = False
 
+
+    idx = int(time.time())
+    if load_checkpoint:
         # change start_itr and dump_path accordingly to load required file
-        idx = int(time.time())
         start_itr = 180
         dump_path = 'run_1622210986'
         checkpoint_name = meta_policy_search_path + '/data/pro-mp/{}/{}/checkpoints/ProMP_Iteration_{}.meta'.format(task, dump_path, start_itr)
@@ -136,7 +150,7 @@ if __name__=="__main__":
             # sampler config
             'rollouts_per_meta_task': 20,
             'max_path_length': 100,
-            'parallel': True,
+            'parallel': False,
 
             # sample processor config
             'discount': 0.99,

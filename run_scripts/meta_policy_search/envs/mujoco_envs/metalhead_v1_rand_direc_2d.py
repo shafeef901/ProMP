@@ -9,7 +9,7 @@ class MetalheadEnvV1(mujoco_env.MujocoEnv, utils.EzPickle):
         mujoco_env.MujocoEnv.__init__(self, model_path, 5)
         utils.EzPickle.__init__(self)
 
-    def _step(self, action):
+    def step(self, action):
         xposbefore = self.model.data.qpos[0, 0]
         torsoanglebefore = self.model.data.qpos[2, 0]
         self.do_simulation(action, self.frame_skip)

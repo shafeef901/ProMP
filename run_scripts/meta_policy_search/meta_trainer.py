@@ -163,9 +163,8 @@ class Trainer(object):
 
                 # save checkpoint
 
-                file_name = os.path.join(self.checkpoint_path, 'checkpoints/ProMP_Iteration_{}'.format(itr))
-
                 if itr % 20 == 0:
+                    file_name = os.path.join(self.checkpoint_path, 'checkpoints/ProMP_Iteration_{}'.format(itr))
                     print("Saving model...")
                     self.saver.save(sess, file_name)
                     # self.saver.save(sess, './{}_Iteration_{}'.format("_".join(self.mode_name.split()), itr))

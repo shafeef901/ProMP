@@ -18,7 +18,7 @@ meta_policy_search_path = '/'.join(os.path.realpath(os.path.dirname(__file__)).s
 def run_experiment(config):
     start_itr = 0
     idx = int(time.time())
-    exp_dir = '{}/data/{}/run_{}'.format(meta_policy_search_path, EXP_NAME, idx)
+    exp_dir = '{}/data/{}/{}/run_{}'.format(meta_policy_search_path, EXP_NAME, config['env_name'], idx)
 
     # change flag to load checkpoint, dont forget to put the checkpoint number
     load_checkpoint = False
@@ -88,7 +88,8 @@ if __name__ == '__main__':
 
     config = {
                 # Environment
-                'env': HalfCheetahEnv,
+                'env': HalfCheetahHFieldEnv,
+                'env_name': 'HalfCheetahHFieldEnv',
                 'max_path_length': 1000,
                 'task': None,
                 'normalize': True,
@@ -120,5 +121,7 @@ if __name__ == '__main__':
                 'n_parallel': 1,
 
     }
+
+    print(config['env'])
 
     run_experiment(config)

@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # args = parser.parse_args()
 
     with tf.compat.v1.Session().as_default() as sess:
-        pkl_path = "../data/pro-mp/MetalheadEnvV1RandDirec/run_1622811055/params.pkl"
+        pkl_path = "../data/pro-mp/MetalheadEnvV1RandDirec/run_1622816416/params.pkl"
         max_path_length = 1000
 
         print("Testing policy %s" % pkl_path)

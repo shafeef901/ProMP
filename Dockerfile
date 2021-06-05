@@ -37,6 +37,7 @@ RUN apt-get -y install libxrandr2 libxinerama-dev libxi6 libxcursor-dev
 RUN apt-get install -y vim ack-grep
 RUN pip install --upgrade pip
 # usual pip install pygame will fail
+RUN pip install typing
 RUN apt-get build-dep -y python-pygame
 RUN pip install Pillow
 RUN apt install -y libopenmpi-dev

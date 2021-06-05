@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # args = parser.parse_args()
 
     with tf.compat.v1.Session().as_default() as sess:
-        pkl_path = "../data/pro-mp/HalfCheetahRandDirecEnv/run_1622735108/params.pkl"
+        pkl_path = "../data/grbal/HalfCheetahHFieldEnv/run_1622828563/params.pkl"
         max_path_length = 1000
 
         print("Testing policy %s" % pkl_path)

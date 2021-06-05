@@ -6,7 +6,7 @@ RUN apt-get update --fix-missing && apt-get install -y wget bzip2 ca-certificate
     libglib2.0-0 libxext6 libsm6 libxrender1 \
     git mercurial subversion
 RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
-    wget  --no-check-certificate --quiet https://repo.continuum.io/archive/Anaconda2-2.5.0-Linux-x86_64.sh && \
+    wget  --no-check-certificate --quiet https://repo.continuum.io/archive/Anaconda3-5.2.0-Linux-x86_64.sh && \
     /bin/bash /Anaconda2-2.5.0-Linux-x86_64.sh -b -p /opt/conda && \
     rm /Anaconda2-2.5.0-Linux-x86_64.sh
 RUN sed -i~orig -e 's/# deb-src/deb-src/' /etc/apt/sources.list && apt-get update --fix-missing

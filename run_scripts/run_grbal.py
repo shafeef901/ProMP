@@ -11,11 +11,11 @@ import json
 import time
 import os
 
-EXP_NAME = 'grbal'
-
-meta_policy_search_path = '/'.join(os.path.realpath(os.path.dirname(__file__)).split('/')[:-1])
-
 def run_experiment(config):
+
+    EXP_NAME = 'grbal'
+    meta_policy_search_path = '/'.join(os.path.realpath(os.path.dirname(__file__)).split('/')[:-1])
+
     start_itr = 0
     idx = int(time.time())
     exp_dir = '{}/data/{}/{}/run_{}'.format(meta_policy_search_path, EXP_NAME, config['env_name'], idx)

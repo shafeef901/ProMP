@@ -31,6 +31,6 @@ if __name__ == "__main__":
         policy._pre_update_mode = True
         # policy.meta_batch_size = 1
         env = data['env']
-        env.set_task(1.0)
+        # env.set_task(1.0)
         path = rollout(env, policy, max_path_length=max_path_length, animated=True, speedup=10,
                        video_filename='sim_out.mp4', save_video=False, ignore_done=False)

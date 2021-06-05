@@ -33,7 +33,7 @@ RUN apt-get -y install zlib1g-dev
 RUN apt-get -y build-dep glfw
 RUN apt-get -y install libxrandr2 libxinerama-dev libxi6 libxcursor-dev
 # copied from requirements.txt
-#RUN pip install imageio tabulate nose
+#RUN pip install imageio tabulate nose typing
 RUN apt-get install -y vim ack-grep
 RUN pip install --upgrade pip
 # usual pip install pygame will fail

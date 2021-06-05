@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # args = parser.parse_args()
 
     with tf.compat.v1.Session().as_default() as sess:
-        pkl_path = "../data/pro-mp/MetalheadEnvV1RandDirec/run_1622816416/params.pkl"
+        pkl_path = "../data/pro-mp/HalfCheetahRandDirecEnv/run_1622735108/params.pkl"
         max_path_length = 1000
 
         print("Testing policy %s" % pkl_path)
@@ -31,6 +31,6 @@ if __name__ == "__main__":
         policy._pre_update_mode = True
         # policy.meta_batch_size = 1
         env = data['env']
-        # env.set_task(-1.0)
+        env.set_task(1.0)
         path = rollout(env, policy, max_path_length=max_path_length, animated=True, speedup=10,
                        video_filename='sim_out.mp4', save_video=False, ignore_done=False)

@@ -18,6 +18,7 @@ INSTANCE_TO_PRICE = {
     'm4.4xlarge': 0.8,
     'm4.8xlarge': 1.6,
     'p2.xlarge': 0.2,
+    't2.micro': 0.0035,
 }
 
 class DoodadSweeper(object):
@@ -54,7 +55,7 @@ class DoodadSweeper(object):
 
     def run_sweep_ec2(self, run_method, params, bucket_name, 
                       s3_log_name=None, add_date_to_logname=True,
-                      region='us-east-2', instance_type='c4.xlarge', repeat=1):
+                      region='us-east-2', instance_type='t2.micro', repeat=1):
         if s3_log_name is None:
             s3_log_name = 'unnamed_experiment'
         if add_date_to_logname:
@@ -74,7 +75,7 @@ class DoodadSweeper(object):
 
     def run_single_ec2(self, run_method, kwargs, bucket_name, 
                       s3_log_name=None, add_date_to_logname=True,
-                      region='us-east-2', instance_type='c4.xlarge'):
+                      region='us-east-2', instance_type='t2.micro'):
         if s3_log_name is None:
             s3_log_name = 'unnamed_experiment'
         if add_date_to_logname:

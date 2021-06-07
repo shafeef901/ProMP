@@ -218,9 +218,9 @@ def dedent(s):
 class EC2SpotDocker(DockerMode):
     def __init__(self,
             credentials,
-            region='us-west-1',
-            s3_bucket_region='us-west-1',
-            instance_type='m1.small',
+            region='us-east-2',
+            s3_bucket_region='us-east-2',
+            instance_type='t2.micro',
             spot_price=0.0,
             s3_bucket=None,
             terminate=True,
@@ -555,7 +555,7 @@ class EC2SpotDocker(DockerMode):
 
 class EC2AutoconfigDocker(EC2SpotDocker):
     def __init__(self,
-            region='us-west-1',
+            region='us-east-2',
             s3_bucket=None,
             image_id=None,
             aws_key_name=None,

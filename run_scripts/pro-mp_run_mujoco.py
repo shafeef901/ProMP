@@ -111,18 +111,19 @@ if __name__=="__main__":
     start_itr = 0
     task = 'HalfCheetahRandDirecEnv'
 
+
     parser = argparse.ArgumentParser(description='ProMP: Proximal Meta-Policy Search')
     parser.add_argument('--config_file', type=str, default='', help='json file with run specifications')
+    idx = int(time.time())
 
     # change flag to load checkpoint
     load_checkpoint = False
 
 
-    idx = int(time.time())
     if load_checkpoint:
         # change start_itr and dump_path accordingly to load required file
-        start_itr = 180
-        dump_path = 'run_1622210986'
+        start_itr = 400
+        dump_path = 'run_1622874740'
         checkpoint_name = meta_policy_search_path + '/data/pro-mp/{}/{}/checkpoints/ProMP_Iteration_{}.meta'.format(task, dump_path, start_itr)
         assert os.path.exists(checkpoint_name), "Provide valid checkpoint name."
 

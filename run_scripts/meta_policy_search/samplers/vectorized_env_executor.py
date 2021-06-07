@@ -41,6 +41,12 @@ class MetaIterativeEnvExecutor(object):
         # stack results split to obs, rewards, ...
         obs, rewards, dones, env_infos = list(map(list, zip(*all_results)))
 
+        for (r, env) in zip(rewards,self.envs):
+            if env.get_task()>0:
+                print(r, "Forward")
+            else:
+                print(r, "Backward")
+
         # reset env when done or max_path_length reached
         dones = np.asarray(dones)
         self.ts += 1

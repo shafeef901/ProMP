@@ -1,7 +1,8 @@
 from meta_policy_search.baselines.linear_baseline import LinearFeatureBaseline
-from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
+# from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
 # from meta_policy_search.envs.mujoco_envs.ant_rand_goal import AntRandGoalEnv
-# from meta_policy_search.envs.mujoco_envs.ant_rand_direc import AntRandDirecEnv
+from meta_policy_search.envs.mujoco_envs.ant_rand_direc import AntRandDirecEnv
+from meta_policy_search.envs.mujoco_envs.ant_rand_direc_2d import AntRandDirec2DEnv
 # from meta_policy_search.envs.mujoco_envs.metalhead_v1_rand_direc import MetalheadEnvV1RandDirec
 from meta_policy_search.envs.normalized_env import normalize
 from meta_policy_search.meta_algos.pro_mp import ProMP
@@ -109,7 +110,7 @@ if __name__=="__main__":
     """
 
     start_itr = 0
-    task = 'HalfCheetahRandDirecEnv'
+    task = 'AntRandDirecEnv'
 
 
     parser = argparse.ArgumentParser(description='ProMP: Proximal Meta-Policy Search')
@@ -151,7 +152,7 @@ if __name__=="__main__":
             # sampler config
             'rollouts_per_meta_task': 20,
             'max_path_length': 100,
-            'parallel': False,
+            'parallel': True,
 
             # sample processor config
             'discount': 0.99,

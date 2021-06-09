@@ -6,10 +6,10 @@ import mujoco_py
 import numpy as np
 
 from meta_policy_search.baselines.linear_baseline import LinearFeatureBaseline
-from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
+# from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
 # from meta_policy_search.envs.mujoco_envs.ant_rand_goal import AntRandGoalEnv
 # from meta_policy_search.envs.mujoco_envs.ant_rand_direc import AntRandDirecEnv
-# from meta_policy_search.envs.mujoco_envs.metalhead_v1_rand_direc import MetalheadEnvV1RandDirec
+from meta_policy_search.envs.mujoco_envs.metalhead_v1_rand_direc import MetalheadEnvV1RandDirec
 from meta_policy_search.envs.normalized_env import normalize
 from meta_policy_search.meta_algos.pro_mp import ProMP
 from meta_policy_search.samplers.meta_sampler import MetaSampler
@@ -19,6 +19,13 @@ from meta_policy_search.samplers.utils import rollout
 from meta_policy_search.utils import logger
 
 
+'''
+    1. Change env in config
+    2. Change path to load .pkl file
+    
+'''
+
+
 if __name__ == "__main__":
 
     config = {
@@ -26,11 +33,11 @@ if __name__ == "__main__":
 
             'baseline': 'LinearFeatureBaseline',
 
-            'env': 'HalfCheetahRandDirecEnv',
+            'env': 'MetalheadEnvV1RandDirec',
 
             # sampler config
             'rollouts_per_meta_task': 20,
-            'max_path_length': 100,
+            'max_path_length': 1000,
             'parallel': False,
 
             # sample processor config
@@ -56,23 +63,10 @@ if __name__ == "__main__":
 
     }
 
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("param", type=str)
-    # parser.add_argument('--max_path_length', type=int, default=1000,
-    #                     help='Max length of rollout')
-    # parser.add_argument('--speedup', type=float, default=1,
-    #                     help='Speedup')
-    # parser.add_argument('--video_filename', type=str,
-    #                     help='path to the out video file')
-    # parser.add_argument('--prompt', type=bool, default=False,
-    #                     help='Whether or not to prompt for more sim')
-    # parser.add_argument('--ignore_done', type=bool, default=False,
-    #                     help='Whether stop animation when environment done or continue anyway')
-    # args = parser.parse_args()
 
     sess = tf.InteractiveSession()
 
-    pkl_path = "../data/pro-mp/HalfCheetahRandDirecEnv/run_1622874740/params.pkl"
+    pkl_path = "../data/pro-mp/MetalheadEnvV1RandDirec/run_1622816416/params_170.pkl"
     max_path_length = 1000
 
     print("Testing policy %s" % pkl_path)
@@ -115,7 +109,7 @@ if __name__ == "__main__":
     )
 
 
-    uninit_vars = [var for var in tf.global_variables() if not sess.run(tf.is_variable_initialized(var))]
+    uninit_vars = [var for var in tf.compat.v1.global_variables() if not sess.run(tf.is_variable_initialized(var))]
     sess.run(tf.variables_initializer(uninit_vars))
 
     # Sampling tasks for pre-updating:

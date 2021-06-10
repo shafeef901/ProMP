@@ -49,7 +49,7 @@ RUN apt-get -y install libav-tools
 CMD alias ffmpeg="avconv"
 
 # ========== Setup mujoco ========
-CMD mkdir /root/.mujoco
+# CMD mkdir /root/.mujoco
 RUN wget https://www.roboti.us/download/mjpro131_linux.zip
 RUN unzip mjpro131_linux.zip -d /root/.mujoco
 ADD mjkey.txt /root/.mujoco/mjkey.txt
@@ -71,4 +71,5 @@ ENV PATH /opt/conda/envs/learning_to_adapt/bin:$PATH
 RUN echo "source activate learning_to_adapt" >> /root/.bashrc
 ENV BASH_ENV /root/.bashrc
 WORKDIR /root/code
+RUN ls -a
 

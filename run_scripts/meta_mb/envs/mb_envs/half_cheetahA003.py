@@ -26,6 +26,7 @@ class HalfCheetahA003Env(MetaEnv, mujoco_env.MujocoEnv, utils.EzPickle):
         reward_run = start_ob[8]
 
         action += np.random.uniform(low=-0.03, high=0.03, size=action.shape)
+        
         self.do_simulation(action, self.frame_skip)
         ob = self._get_obs()
         if getattr(self, 'action_space', None):

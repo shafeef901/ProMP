@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 import time
 from meta_mb.utils.utils import set_seed, ClassEncoder
+
 from meta_mb.baselines.linear_baseline import LinearFeatureBaseline
 from meta_mb.envs.mb_envs import *
 from meta_mb.meta_algos.trpo_maml import TRPOMAML
@@ -113,15 +114,28 @@ def run_experiment(kwargs):
             positive_adv=kwargs['positive_adv'],
         )
 
-        algo = TRPOMAML(
-            policy=policy,
-            step_size=kwargs['step_size'],
-            inner_type=kwargs['inner_type'],
-            inner_lr=kwargs['inner_lr'],
-            meta_batch_size=kwargs['meta_batch_size'],
-            num_inner_grad_steps=kwargs['num_inner_grad_steps'],
-            exploration=kwargs['exploration'],
-        )
+        algo = ProMP(
+        policy=policy,
+        inner_lr=kwargs['inner_lr'],
+        meta_batch_size=kwargs['meta_batch_size'],
+        num_inner_grad_steps=kwargs['num_inner_grad_steps'],
+        learning_rate=kwargs['learning_rate'],
+        num_ppo_steps=kwargs['num_promp_steps'],
+        clip_eps=kwargs['clip_eps'],
+        target_inner_step=kwargs['target_inner_step'],
+        init_inner_kl_penalty=kwargs['init_inner_kl_penalty'],
+        adaptive_inner_kl_penalty=kwargs['adaptive_inner_kl_penalty'],
+    )
+
+        # algo = TRPOMAML(
+        #     policy=policy,
+        #     step_size=kwargs['step_size'],
+        #     inner_type=kwargs['inner_type'],
+        #     inner_lr=kwargs['inner_lr'],
+        #     meta_batch_size=kwargs['meta_batch_size'],
+        #     num_inner_grad_steps=kwargs['num_inner_grad_steps'],
+        #     exploration=kwargs['exploration'],
+        # )
 
         trainer = Trainer(
             algo=algo,
@@ -138,7 +152,6 @@ def run_experiment(kwargs):
             log_real_performance=kwargs['log_real_performance'],
             meta_steps_per_iter=kwargs['meta_steps_per_iter'],
             sample_from_buffer=kwargs['sample_from_buffer'],
-            fraction_meta_batch_size=kwargs['fraction_meta_batch_size'],
             sess=sess
         )
 
@@ -163,7 +176,8 @@ if __name__ == '__main__':
         'normalize_adv': True,
         'positive_adv': False,
         'log_real_performance': True,
-        'meta_steps_per_iter': (50, 100),
+        'meta_steps_per_iter': 30,
+        'rollouts_per_meta_task': 20,
 
         # Real Env Sampling
         'real_env_rollouts_per_meta_task': 1,
@@ -188,14 +202,24 @@ if __name__ == '__main__':
         'policy_output_nonlinearity': None,
 
         # Meta-Algo
-        'meta_batch_size': 20,  # Note: It has to be multiple of num_models
-        'rollouts_per_meta_task': 20,
-        'num_inner_grad_steps': 1,
-        'inner_lr': 0.001,
-        'inner_type': 'log_likelihood',
-        'step_size': 0.01,
-        'exploration': False,
-        'sample_from_buffer': True,
+        # 'meta_batch_size': 20,  # Note: It has to be multiple of num_models        
+        # 'num_inner_grad_steps': 1,
+        # 'inner_lr': 0.001,
+        # 'inner_type': 'log_likelihood',
+        # 'step_size': 0.01,
+        # 'exploration': False,
+        # 'sample_from_buffer': True,
+
+        # ProMP Config
+        'inner_lr': 0.1, # adaptation step size
+        'learning_rate': 1e-3, # meta-policy gradient step size
+        'num_promp_steps': 5, # number of ProMp steps without re-sampling
+        'clip_eps': 0.3, # clipping range
+        'target_inner_step': 0.01,
+        'init_inner_kl_penalty': 5e-4,
+        'adaptive_inner_kl_penalty': True, # whether to use an adaptive or fixed KL-penalty coefficient
+        # 'n_itr': 1001, # number of overall training iterations
+        'meta_batch_size': 40,
 
         'scope': None,
         'exp_tag': '', # For changes besides hyperparams

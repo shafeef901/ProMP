@@ -7,7 +7,6 @@ from meta_mb.policies.rnn_mpc_controller import RNNMPCController
 from meta_mb.samplers.sampler import Sampler
 from meta_mb.samplers.mb_sample_processor import ModelSampleProcessor
 from meta_mb.logger import logger
-from experiment_utils.run_sweep import run_sweep
 from meta_mb.envs.mujoco.half_cheetah_env import HalfCheetahEnv
 
 from meta_mb.utils.utils import ClassEncoder

@@ -3,7 +3,6 @@ import json
 import tensorflow as tf
 import numpy as np
 import time
-from experiment_utils.run_sweep import run_sweep
 from meta_mb.utils.utils import set_seed, ClassEncoder
 from meta_mb.baselines.linear_baseline import LinearFeatureBaseline
 from meta_mb.envs.mb_envs import *

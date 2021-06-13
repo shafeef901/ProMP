@@ -211,7 +211,7 @@ if __name__ == '__main__':
 
         # Meta-Algo
         # 'meta_batch_size': 20,  # Note: It has to be multiple of num_models        
-        # 'num_inner_grad_steps': 1,
+        'num_inner_grad_steps': 1,
         # 'inner_lr': 0.001,
         # 'inner_type': 'log_likelihood',
         # 'step_size': 0.01,
@@ -225,7 +225,7 @@ if __name__ == '__main__':
         'clip_eps': 0.3, # clipping range
         'target_inner_step': 0.01,
         'init_inner_kl_penalty': 5e-4,
-        'adaptive_inner_kl_penalty': True, # whether to use an adaptive or fixed KL-penalty coefficient
+        'adaptive_inner_kl_penalty': False, # whether to use an adaptive or fixed KL-penalty coefficient
         # 'n_itr': 1001, # number of overall training iterations
         'meta_batch_size': 40,
 

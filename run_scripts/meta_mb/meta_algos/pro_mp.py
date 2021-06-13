@@ -1,6 +1,6 @@
-from meta_policy_search.utils import logger
-from meta_policy_search.meta_algos.base import MAMLAlgo
-from meta_policy_search.optimizers.maml_first_order_optimizer import MAMLPPOOptimizer
+from meta_mb.utils import logger
+from meta_mb.meta_algos.base import MAMLAlgo
+from meta_mb.optimizers.maml_first_order_optimizer import MAMLPPOOptimizer
 
 import tensorflow as tf
 import numpy as np

@@ -15,6 +15,7 @@ class MetaAlgo(object):
     """
 
     def __init__(self, policy):
+        print(policy, Policy)
         assert isinstance(policy, Policy)
         self.policy = policy
         self._optimization_keys = None

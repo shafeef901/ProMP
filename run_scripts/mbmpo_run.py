@@ -153,6 +153,7 @@ if __name__ == '__main__':
         'algo': 'mbmpo',
         'baseline': LinearFeatureBaseline,
         'env': HalfCheetahEnv,
+        'env_name': 'HalfCheetahEnv',
 
         # Problem Conf
         'n_itr': 401,

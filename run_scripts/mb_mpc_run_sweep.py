@@ -133,6 +133,7 @@ if __name__ == '__main__':
 
                 # Problem
                 'env': [HalfCheetahEnv],  # 'HalfCheetahEnv'
+                'env_name': 'HalfCheetahEnv'
                 'max_path_length': [100],
                 'normalize': [False],
                  'n_itr': [50],

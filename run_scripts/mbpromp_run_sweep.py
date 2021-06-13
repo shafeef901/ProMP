@@ -25,7 +25,7 @@ def run_experiment(**kwargs):
 
     start_itr = 0
     idx = int(time.time())
-    exp_dir = '{}/data/{}/{}/run_{}'.format(meta_policy_search_path, EXP_NAME, config['env_name'], idx)
+    exp_dir = '{}/data/{}/{}/run_{}'.format(meta_policy_search_path, EXP_NAME, kwargs['env_name'], idx)
 
     # # change flag to load checkpoint, dont forget to put the checkpoint number
     # load_checkpoint = False
@@ -165,6 +165,7 @@ if __name__ == '__main__':
         'algo': ['MBProMP'],
         'baseline': [LinearFeatureBaseline],
         'env': [HalfCheetahEnv],
+        'env_name': 'HalfCheetahEnv',
 
         # Problem Conf
         'n_itr': [101],

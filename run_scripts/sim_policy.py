@@ -4,12 +4,14 @@ import argparse
 import time
 import mujoco_py
 import numpy as np
+import os
+import moviepy.editor as mpy
+
 
 from meta_policy_search.baselines.linear_baseline import LinearFeatureBaseline
-# from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
+from meta_policy_search.envs.mujoco_envs.half_cheetah_rand_direc import HalfCheetahRandDirecEnv
 # from meta_policy_search.envs.mujoco_envs.ant_rand_goal import AntRandGoalEnv
 # from meta_policy_search.envs.mujoco_envs.ant_rand_direc import AntRandDirecEnv
-from meta_policy_search.envs.mujoco_envs.metalhead_v1_rand_direc import MetalheadEnvV1RandDirec
 from meta_policy_search.envs.normalized_env import normalize
 from meta_policy_search.meta_algos.pro_mp import ProMP
 from meta_policy_search.samplers.meta_sampler import MetaSampler
@@ -28,16 +30,20 @@ from meta_policy_search.utils import logger
 
 if __name__ == "__main__":
 
+    save_video = True
+    mode='human'
+    images = []
+
     config = {
             'seed': 1,
 
             'baseline': 'LinearFeatureBaseline',
 
-            'env': 'MetalheadEnvV1RandDirec',
+            'env': 'HalfCheetahRandDirecEnv',
 
             # sampler config
             'rollouts_per_meta_task': 20,
-            'max_path_length': 1000,
+            'max_path_length': 500,
             'parallel': False,
 
             # sample processor config
@@ -66,8 +72,10 @@ if __name__ == "__main__":
 
     sess = tf.InteractiveSession()
 
-    pkl_path = "../data/pro-mp/MetalheadEnvV1RandDirec/run_1622816416/params_170.pkl"
-    max_path_length = 1000
+    pkl_path = "../data/pro-mp/AntRandDirec2DEnv/run_1623261030/params.pkl"
+    if save_video:
+        video_filename = os.path.join('/'.join(pkl_path.split('/')[:-1]), 'sim_out.mp4')
+    max_path_length = 600
 
     print("Testing policy %s" % pkl_path)
     data = joblib.load(pkl_path)
@@ -130,15 +138,36 @@ if __name__ == "__main__":
 
     # Postupdate:
     while True:
+
         task_i = np.random.choice(range(config['meta_batch_size']))
         print("Current task {}".format(task_i))
         env.set_task(tasks[task_i])
         print(tasks[task_i])
         obs = env.reset()
         for _ in range(config['max_path_length']):
-            env.render()
+            env.render(mode)
             action, _ = policy.get_action(obs, task_i)
             obs, reward, done, _ = env.step(action)
-            time.sleep(0.001)
+            print(reward)
+            time.sleep(0.0016)
+
+            # if save_video:
+            #     image = env.render(mode)
+            #     images.append(image)
+
             if done:
                 break
+
+        # if save_video:
+        #     fps = int(1/0.0016)
+        #     clip = mpy.ImageSequenceClip(images, fps=fps)
+        #     if video_filename[-3:] == 'gif':
+        #         if tasks[task_i] == 1:
+        #             video_filename = 'sim_out_fwd.mp4'
+        #         else:
+        #             video_filename = 'sim_out_back.mp4'
+        #         clip.write_gif(video_filename, fps=fps)
+        #     else:
+
+        #         clip.write_videofile(video_filename, fps=fps)
+        #     print("Video saved at %s" % video_filename)

@@ -68,16 +68,47 @@ def main(config):
         sample_processor=sample_processor,
         n_itr=config['n_itr'],
         num_inner_grad_steps=config['num_inner_grad_steps'],
+        checkpoint_path=args.dump_path,
+        start_itr=config['start_itr'],
     )
 
     trainer.train()
 
 if __name__=="__main__":
-    idx = int(time.time())
+    """
+        ### CONFIGURATIONS ###
+
+        task            - task specifying environment and nature of task
+        load_checkpoint - flag to specify if we are continuing training from checkpoint
+        start_itr       - for continuing training from a checkpoint number
+        dump_path       - checkpoint folder name, if continuing training, else creates new path
+        
+        ###                ###
+    """
+
+    start_itr = 0
+    task = 'HalfCheetahRandDirecEnv'
+
 
     parser = argparse.ArgumentParser(description='ProMP: Proximal Meta-Policy Search')
     parser.add_argument('--config_file', type=str, default='', help='json file with run specifications')
-    parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/pro-mp/run_%d' % idx)
+    idx = int(time.time())
+
+    # change flag to load checkpoint
+    load_checkpoint = False
+
+
+    if load_checkpoint:
+        # change start_itr and dump_path accordingly to load required file
+        start_itr = 400
+        dump_path = 'run_1622874740'
+        checkpoint_name = meta_policy_search_path + '/data/maml/{}/{}/checkpoints/MAML_Iteration_{}.meta'.format(task, dump_path, start_itr)
+        assert os.path.exists(checkpoint_name), "Provide valid checkpoint name."
+
+        parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/maml/{}/{}'.format(task,dump_path))
+
+    else:    
+        parser.add_argument('--dump_path', type=str, default=meta_policy_search_path + '/data/maml/{}/run_{}'.format(task,idx))
 
     args = parser.parse_args()
 
@@ -93,7 +124,7 @@ if __name__=="__main__":
 
             'baseline': 'LinearFeatureBaseline',
 
-            'env': 'HalfCheetahRandDirecEnv',
+            'env': task,
 
             # sampler config
             'rollouts_per_meta_task': 20,
@@ -117,7 +148,7 @@ if __name__=="__main__":
             'meta_batch_size': 40, # number of sampled meta-tasks per iterations
             'num_inner_grad_steps': 1, # number of inner / adaptation gradient steps
             'inner_type' : 'log_likelihood', # type of inner loss function used
-
+            'start_itr': start_itr,
         }
 
     # configure logger

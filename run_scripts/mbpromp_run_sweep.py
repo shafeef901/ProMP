@@ -216,7 +216,7 @@ if __name__ == '__main__':
         # 'inner_type': 'log_likelihood',
         # 'step_size': 0.01,
         # 'exploration': False,
-        # 'sample_from_buffer': True,
+        'sample_from_buffer': True,
 
         # ProMP Config
         'inner_lr': 0.1, # adaptation step size

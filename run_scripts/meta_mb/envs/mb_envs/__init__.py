@@ -20,7 +20,7 @@ from .half_cheetahO001 import HalfCheetahO001Env
 from .fwalker2d import FWalker2dEnv
 from .fswimmer import FSwimmerEnv
 from .fhopper import FHopperEnv
-from .fant import FAntEnv
+# from .fant import FAntEnv
 from .cartpoleO01 import CartPoleO01Env
 from .cartpoleO001 import CartPoleO001Env
 from .humanoid import HumanoidEnv

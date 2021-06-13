@@ -19,7 +19,7 @@ from meta_mb.envs.normalized_env import normalize
 
 EXP_NAME = 'mbmpo'
 
-def run_experiment(**kwargs):
+def run_experiment(kwargs):
     meta_policy_search_path = '/'.join(os.path.realpath(os.path.dirname(__file__)).split('/')[:-1])
 
     start_itr = 0

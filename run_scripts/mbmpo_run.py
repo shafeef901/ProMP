@@ -4,9 +4,8 @@ import tensorflow as tf
 import numpy as np
 import time
 from meta_mb.utils.utils import set_seed, ClassEncoder
-
 from meta_mb.baselines.linear_baseline import LinearFeatureBaseline
-from meta_mb.envs.mb_envs import *
+from meta_mb.envs_dyn.half_cheetah_env import HalfCheetahEnv
 from meta_mb.meta_algos.trpo_maml import TRPOMAML
 from meta_mb.trainers.mbmpo_trainer import Trainer
 from meta_mb.samplers.meta_samplers.meta_sampler import MetaSampler
@@ -114,28 +113,15 @@ def run_experiment(kwargs):
             positive_adv=kwargs['positive_adv'],
         )
 
-        algo = ProMP(
-        policy=policy,
-        inner_lr=kwargs['inner_lr'],
-        meta_batch_size=kwargs['meta_batch_size'],
-        num_inner_grad_steps=kwargs['num_inner_grad_steps'],
-        learning_rate=kwargs['learning_rate'],
-        num_ppo_steps=kwargs['num_promp_steps'],
-        clip_eps=kwargs['clip_eps'],
-        target_inner_step=kwargs['target_inner_step'],
-        init_inner_kl_penalty=kwargs['init_inner_kl_penalty'],
-        adaptive_inner_kl_penalty=kwargs['adaptive_inner_kl_penalty'],
-    )
-
-        # algo = TRPOMAML(
-        #     policy=policy,
-        #     step_size=kwargs['step_size'],
-        #     inner_type=kwargs['inner_type'],
-        #     inner_lr=kwargs['inner_lr'],
-        #     meta_batch_size=kwargs['meta_batch_size'],
-        #     num_inner_grad_steps=kwargs['num_inner_grad_steps'],
-        #     exploration=kwargs['exploration'],
-        # )
+        algo = TRPOMAML(
+            policy=policy,
+            step_size=kwargs['step_size'],
+            inner_type=kwargs['inner_type'],
+            inner_lr=kwargs['inner_lr'],
+            meta_batch_size=kwargs['meta_batch_size'],
+            num_inner_grad_steps=kwargs['num_inner_grad_steps'],
+            exploration=kwargs['exploration'],
+        )
 
         trainer = Trainer(
             algo=algo,
@@ -169,8 +155,8 @@ if __name__ == '__main__':
         'env_name': 'HalfCheetahEnv',
 
         # Problem Conf
-        'n_itr': 401,
-        'max_path_length': 50,
+        'n_itr': 201,
+        'max_path_length': 150,
         'discount': 0.99,
         'gae_lambda': 1.,
         'normalize_adv': True,
@@ -186,7 +172,7 @@ if __name__ == '__main__':
         # Dynamics Model
         'num_models': 5,
         'dynamics_hidden_sizes': (500, 500),
-        'dyanmics_hidden_nonlinearity': 'relu',
+        'dyanmics_hidden_nonlinearity': 'swish',
         'dyanmics_output_nonlinearity': None,
         'dynamics_max_epochs': 50,
         'dynamics_learning_rate': 1e-3,

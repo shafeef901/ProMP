@@ -38,9 +38,6 @@ class HalfCheetahHFieldEnv(MujocoEnv, Serializable):
             self.get_body_com("torso").flat,
         ])
 
-    def viewer_setup(self):
-        self.viewer.cam.distance = self.model.stat.extent * 0.5
-
     def get_body_xmat(self, body_name):
         idx = self.model.body_names.index(body_name)
         return self.model.data.xmat[idx].reshape((3, 3))
@@ -180,11 +177,11 @@ class HalfCheetahHFieldEnv(MujocoEnv, Serializable):
 
 
 if __name__ == '__main__':
-    env = HalfCheetahHFieldEnv(task='steep')
+    env = HalfCheetahHFieldEnv(task='hfield')
     while True:
         env.reset()
         env.reset_task()
-        for _ in range(1000):
+        for _ in range(100):
             env.render()
             env.step(env.action_space.sample())
         env.stop_viewer()

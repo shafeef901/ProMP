@@ -1,7 +1,7 @@
 import numpy as np
 import os.path as osp
 from meta_mb import spaces
-from meta_mb.envs.base import Env
+from meta_mb.envs_dyn.base import Env
 from meta_mb.mujoco_py import MjModel, MjViewer
 
 MODEL_DIR = osp.abspath(

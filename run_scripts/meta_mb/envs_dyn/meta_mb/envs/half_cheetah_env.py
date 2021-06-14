@@ -1,28 +1,23 @@
 import numpy as np
 from meta_mb.utils.serializable import Serializable
+from meta_mb.envs.mujoco_env import MujocoEnv
 from meta_mb.logger import logger
-import gym
-from gym.envs.mujoco.mujoco_env import MujocoEnv
-from meta_mb.meta_envs.base import MetaEnv
-
 import os
 
 
-class HalfCheetahEnv(MetaEnv, MujocoEnv, Serializable):
+class HalfCheetahEnv(MujocoEnv, Serializable):
 
     def __init__(self, task='cripple', reset_every_episode=False):
         Serializable.quick_init(self, locals())
         self.cripple_mask = None
         self.reset_every_episode = reset_every_episode
         self.first = True
-        
+        MujocoEnv.__init__(self, os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets", "half_cheetah.xml"))
 
-        MujocoEnv.__init__(self, os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets", "half_cheetah.xml"),5)
         task = None if task == 'None' else task
 
         self.cripple_mask = np.ones(self.action_space.shape)
-        
-        print(self.cripple_mask)
+
         self._init_geom_rgba = self.model.geom_rgba.copy()
         self._init_geom_contype = self.model.geom_contype.copy()
         self._init_geom_size = self.model.geom_size.copy()
@@ -50,7 +45,6 @@ class HalfCheetahEnv(MetaEnv, MujocoEnv, Serializable):
         return self.model.data.com_subtree[idx]
 
     def step(self, action):
-        print("Cripple Mask: {} ".format(self.cripple_mask))
         action = self.cripple_mask * action
         self.forward_dynamics(action)
         next_obs = self.get_current_obs()
@@ -70,14 +64,8 @@ class HalfCheetahEnv(MetaEnv, MujocoEnv, Serializable):
         reward = forward_reward - ctrl_cost
         return reward
 
-    def tf_reward(self, obs, acts, next_obs):
-        ctrl_cost = 1e-1 * 0.5 * np.sum(np.square(action), axis=1)
-        forward_reward = (next_obs[:, -3] - obs[:, -3])/self.dt
-        reward = forward_reward - ctrl_cost
-        return reward
-
     def reset_mujoco(self, init_state=None):
-        super(HalfCheetahCrippleEnv, self).reset_mujoco(init_state=init_state)
+        super(HalfCheetahEnv, self).reset_mujoco(init_state=init_state)
         if self.reset_every_episode and not self.first:
             self.reset_task()
         if self.first:
@@ -113,7 +101,7 @@ class HalfCheetahEnv(MetaEnv, MujocoEnv, Serializable):
 
 
 if __name__ == '__main__':
-    env = HalfCheetahCrippleEnv(task='cripple')
+    env = HalfCheetahEnv(task='cripple')
     while True:
         env.reset()
         env.reset_task()

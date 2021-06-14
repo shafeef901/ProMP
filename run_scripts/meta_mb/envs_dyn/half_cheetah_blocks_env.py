@@ -1,13 +1,14 @@
 import numpy as np
 from meta_mb.utils.serializable import Serializable
 from meta_mb.envs.mujoco_env import MujocoEnv
+from meta_mb.meta_envs.base import MetaEnv
 from meta_mb.logger import logger
 import os
 
 
-class HalfCheetahBlocksEnv(MujocoEnv, Serializable):
+class HalfCheetahBlocksEnv(MujocoEnv, MetaEnv, Serializable):
 
-    def __init__(self, task='damping', reset_every_episode=False):
+    def __init__(self, task='damping', reset_every_episode=True):
         Serializable.quick_init(self, locals())
 
         self.reset_every_episode = reset_every_episode
@@ -83,15 +84,15 @@ class HalfCheetahBlocksEnv(MujocoEnv, Serializable):
 
         self.model.forward()
 
-    def log_diagnostics(self, paths):
+    def log_diagnostics(self, paths, prefix):
         progs = [
             path["observations"][-1][-3] - path["observations"][0][-3]
             for path in paths
             ]
-        logger.logkv('AverageForwardProgress', np.mean(progs))
-        logger.logkv('MaxForwardProgress', np.max(progs))
-        logger.logkv('MinForwardProgress', np.min(progs))
-        logger.logkv('StdForwardProgress', np.std(progs))
+        logger.logkv(prefix +'AverageForwardProgress', np.mean(progs))
+        logger.logkv(prefix +'MaxForwardProgress', np.max(progs))
+        logger.logkv(prefix +'MinForwardProgress', np.min(progs))
+        logger.logkv(prefix +'StdForwardProgress', np.std(progs))
 
 
 if __name__ == '__main__':

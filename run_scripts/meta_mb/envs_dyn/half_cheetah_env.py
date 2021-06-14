@@ -6,7 +6,6 @@ from meta_mb.meta_envs.base import MetaEnv
 
 import os
 
-
 class HalfCheetahEnv(MujocoEnv, MetaEnv, Serializable):
 
     def __init__(self, task='cripple', reset_every_episode=True):
@@ -47,7 +46,6 @@ class HalfCheetahEnv(MujocoEnv, MetaEnv, Serializable):
         return self.model.data.com_subtree[idx]
 
     def step(self, action):
-        print(self.cripple_mask)
         action = self.cripple_mask * action
         self.forward_dynamics(action)
         next_obs = self.get_current_obs()

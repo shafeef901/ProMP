@@ -1,12 +1,13 @@
 import numpy as np
 from meta_mb.utils.serializable import Serializable
 from meta_mb.envs.mujoco_env import MujocoEnv
+from meta_mb.meta_envs.base import MetaEnv
 from meta_mb.logger import logger
 import os
 
 
-class HalfCheetahHFieldEnv(MujocoEnv, Serializable):
-    def __init__(self, task='hfield', reset_every_episode=False, reward=True, *args, **kwargs):
+class HalfCheetahHFieldEnv(MujocoEnv, MetaEnv, Serializable):
+    def __init__(self, task='hfield', reset_every_episode=True, reward=True, *args, **kwargs):
         Serializable.quick_init(self, locals())
 
         self.cripple_mask = None

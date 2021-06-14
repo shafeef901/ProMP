@@ -5,7 +5,7 @@ import numpy as np
 import time
 from meta_mb.utils.utils import set_seed, ClassEncoder
 from meta_mb.baselines.linear_baseline import LinearFeatureBaseline
-from meta_mb.envs_dyn.half_cheetah_env import HalfCheetahEnv
+from meta_mb.envs_dyn import *
 from meta_mb.meta_algos.trpo_maml import TRPOMAML
 from meta_mb.trainers.mbmpo_trainer import Trainer
 from meta_mb.samplers.meta_samplers.meta_sampler import MetaSampler
@@ -151,8 +151,8 @@ if __name__ == '__main__':
 
         'algo': 'mbmpo',
         'baseline': LinearFeatureBaseline,
-        'env': HalfCheetahEnv,
-        'env_name': 'HalfCheetahEnv',
+        'env': HalfCheetahHFieldEnv,
+        'env_name': 'HalfCheetahHFieldEnv',
 
         # Problem Conf
         'n_itr': 201,
@@ -172,7 +172,7 @@ if __name__ == '__main__':
         # Dynamics Model
         'num_models': 5,
         'dynamics_hidden_sizes': (500, 500),
-        'dyanmics_hidden_nonlinearity': 'swish',
+        'dyanmics_hidden_nonlinearity': 'relu',
         'dyanmics_output_nonlinearity': None,
         'dynamics_max_epochs': 50,
         'dynamics_learning_rate': 1e-3,

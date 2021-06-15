@@ -1,5 +1,5 @@
 '''
-Code from rllab
+Code from meta_mb.rllab
 '''
 
 from .mjviewer import MjViewer
